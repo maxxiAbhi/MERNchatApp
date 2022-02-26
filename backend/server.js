@@ -1,10 +1,9 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const { chats } = require('./data/dumyData')
-
+const path=require('path')
 
 dotenv.config({ path: './config.env' })
-
 
 
 
@@ -12,10 +11,15 @@ dotenv.config({ path: './config.env' })
 const PORT = process.env.PORT
 const app = express()
 
+//accept json 
+app.use(express.json());
+//static path
+app.use('/static', express.static(path.join(__dirname, 'public')))
 
 
+const auth=require('./route/auth')
 
-
+app.use('/api',auth)
 
 
 app.get('/', function (req, res) {

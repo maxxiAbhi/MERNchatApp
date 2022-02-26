@@ -23,7 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 
 
-
+/public
 /node_modules
 .env
+config.env
 
