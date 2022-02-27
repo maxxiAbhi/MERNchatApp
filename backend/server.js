@@ -4,7 +4,7 @@ const { chats } = require('./data/dumyData')
 const path=require('path')
 
 dotenv.config({ path: './config.env' })
-
+require('./database/connection')
 
 
 
