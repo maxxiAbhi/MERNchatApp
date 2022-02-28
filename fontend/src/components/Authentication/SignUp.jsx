@@ -1,6 +1,7 @@
 import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useToast } from '@chakra-ui/react'
+import axios from 'axios'
 function SignUp() {
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -56,14 +57,63 @@ function SignUp() {
         }
     }
 
-    function submitHandler(e) {
+    async function submitHandler(e) {
+        setLoading(true)
         e.preventDefault()
-        console.log({
-            name,
-            email,
-            password,
-            pic
-        })
+        if (!name || !email || !password || !pic) {
+            toast({
+                title: 'Please Fill All The Filds ',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom'
+            })
+            setLoading(false)
+            return;
+        }
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            const validStatus = {
+                validateStatus: function (status) {
+                    console.log('working')
+                    return status >= 200 && status < 520; // Resolve only if the status code is less than 520
+                }
+            }
+            const data = await axios.post("/api/signup", { name, email, password, pic },validStatus, config)
+            console.log(data)
+            if (data.status === 200) {
+                toast({
+                    title: data.data.message,
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'bottom'
+                })
+                setLoading(false)
+            } else {
+                toast({
+                    title: data.data.message,
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'bottom'
+                })
+                setLoading(false)
+            }
+        } catch (error) {
+            toast({
+                title: `Something Went Wrong`,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom'
+            })
+            setLoading(false)  
+        }
     }
     return (
         <VStack spacing={'5px'}>
