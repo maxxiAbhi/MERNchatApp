@@ -6,9 +6,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     name: { type: String, require: true },
-    email: { type: String, require: true },
+    email: { type: String, require: true, unique: true },
     password: { type: String, require: true },
     pic: { type: String, require: true, default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg" },
+    isAdmin: { type: Boolean, required: true, default: false },
     tokens: [
         {
             token: {
@@ -30,8 +31,8 @@ userSchema.pre('save', async function (next) {
 
 userSchema.methods.generateAuthToken = async function () {
     try {
-        var token = jwt.sign({ _id: this._id },  process.env.JWT_SERECT_KEY,{expiresIn:"30d"});
-        this.tokens=this.tokens.concat({token:token});
+        var token = jwt.sign({ _id: this._id }, process.env.JWT_SERECT_KEY, { expiresIn: "30d" });
+        this.tokens = this.tokens.concat({ token: token });
         await this.save();
         return token;
     } catch (error) {

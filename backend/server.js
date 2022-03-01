@@ -18,13 +18,17 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 
 
 const auth=require('./route/auth')
+const userSerch=require('./route/user')
+const chat=require('./route/chat')
 
 app.use('/api',auth)
+app.use('/api',userSerch)
+app.use('/api',chat)
 
 
-app.get('/', function (req, res) {
-    res.send('Hello World')
-})
+
+
+
 
 app.get('/api/chat', function (req, res) {
     res.send(chats)
