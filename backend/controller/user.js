@@ -9,4 +9,9 @@ exports.serchUser = async (req, res) => {
     }:{}
    const searchData=await User.find(keyWord).find({_id:{$ne:req.userId}})
     console.log(searchData)
+    if(searchData){
+        res.status(200).json(searchData);
+    }else{
+        res.status(400)
+    }
 }
